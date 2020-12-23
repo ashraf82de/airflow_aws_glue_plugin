@@ -1,4 +1,7 @@
-importing Glue operator
+first you have to place the content of the "plugins" folder to airflow/plugins home directory or if using AWS MWAA upload "plugins/Archive.zip" file to s3 and add it to the managed aws airflow servie when creating one.
+
+
+In your code importing Glue operator
 ```python
 from airflow.operators.glue_plugin import AWSGlueJobOperator
 ```
