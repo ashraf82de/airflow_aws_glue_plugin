@@ -16,6 +16,7 @@ class AwsGlueJobHook(AwsHook):
                  worker_type: str = 'Standard',  # 'Standard' | 'G.1X' | 'G.2X'
                  max_capacity: float = 2,
                  job_command_type: str = 'glueetl', # 'pythonshell' | 'gluestreaming' | 'glueetl'
+                 bookmark_enabled: bool = False,
                  *args,
                  **kwargs):
         super().__init__(aws_conn_id=aws_conn_id, *args, **kwargs)
@@ -31,6 +32,7 @@ class AwsGlueJobHook(AwsHook):
         self.worker_type = worker_type
         self.max_capacity = max_capacity
         self.job_command_type = job_command_type
+        self.bookmark_enabled= bookmark_enabled
 
     def create_job(self):
         """
@@ -42,6 +44,11 @@ class AwsGlueJobHook(AwsHook):
                 JobName=self.job_name
             )
         except:
+            bookmark_option = 'job-bookmark-disable'
+            if self.bookmark_enabled:
+                bookmark_option = 'job-bookmark-enable'
+
+            self.script_arguments['--job-bookmark-option'] = bookmark_option
             self.glue.create_job(Name=self.job_name, Role=self.role, GlueVersion=self.glue_version,
                                  Command={'Name': self.job_command_type,
                                           'ScriptLocation': self.script_location,
