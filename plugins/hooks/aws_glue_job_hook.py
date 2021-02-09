@@ -79,4 +79,8 @@ class AwsGlueJobHook(AwsHook):
     def is_job_stopped(self, job_id: str):
         status = self.get_job_status(job_id)
 
-        return status == 'FAILED' or status == 'STOPPED' or status == 'SUCCEEDED'
+        if status == 'FAILED':
+            raise ValueError(f" Job {job_id} failed")
+
+        return status == 'STOPPED' or status == 'SUCCEEDED'
+
