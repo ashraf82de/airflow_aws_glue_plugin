@@ -28,6 +28,7 @@ class AWSGlueJobOperator(BaseOperator):
                  max_capacity: float = 2,
                  job_command_type: str = 'glueetl',
                  bookmark_enabled: bool = False,
+                 connections: list = [],
                  *args, **kwargs
                  ):
         super(AWSGlueJobOperator, self).__init__(*args, **kwargs)
@@ -43,6 +44,7 @@ class AWSGlueJobOperator(BaseOperator):
         self.max_capacity = max_capacity
         self.job_command_type = job_command_type
         self.bookmark_enabled = bookmark_enabled
+        self.connections = connections
 
     def execute(self, context):
         """
@@ -60,7 +62,8 @@ class AWSGlueJobOperator(BaseOperator):
                                   worker_type=self.worker_type,
                                   max_capacity=self.max_capacity,
                                   job_command_type=self.job_command_type,
-                                  bookmark_enabled=self.bookmark_enabled
+                                  bookmark_enabled=self.bookmark_enabled,
+                                  connections=self.connections
                                   )
 
         self.log.info("Initializing AWS Glue Job: {}".format(self.job_name))

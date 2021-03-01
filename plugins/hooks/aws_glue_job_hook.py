@@ -17,6 +17,7 @@ class AwsGlueJobHook(AwsHook):
                  max_capacity: float = 2,
                  job_command_type: str = 'glueetl', # 'pythonshell' | 'gluestreaming' | 'glueetl'
                  bookmark_enabled: bool = False,
+                 connections: list = [],
                  *args,
                  **kwargs):
         super().__init__(aws_conn_id=aws_conn_id, *args, **kwargs)
@@ -33,6 +34,7 @@ class AwsGlueJobHook(AwsHook):
         self.max_capacity = max_capacity
         self.job_command_type = job_command_type
         self.bookmark_enabled= bookmark_enabled
+        self.connections = connections
 
     def create_job(self):
         """
@@ -57,7 +59,9 @@ class AwsGlueJobHook(AwsHook):
                                  Timeout=self.time_out,
                                  WorkerType=self.worker_type,
                                  NumberOfWorkers=self.max_capacity,
-                                 DefaultArguments=self.script_arguments)
+                                 DefaultArguments=self.script_arguments,
+                                 Connections={'Connections': self.connections}
+                                 )
 
     def start_job(self):
         # check if a job exists with that name or create it
