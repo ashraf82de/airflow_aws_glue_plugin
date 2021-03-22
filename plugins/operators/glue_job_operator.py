@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
 from hooks.aws_glue_job_hook import AwsGlueJobHook
 from airflow.models import BaseOperator
-from airflow.utils.decorators import apply_defaults
 
 
 class AWSGlueJobOperator(BaseOperator):
@@ -14,7 +13,6 @@ class AWSGlueJobOperator(BaseOperator):
     https://boto3.amazonaws.com/v1/documentation/api/latest/reference/services/glue.html#Glue.Client.create_job
     read in this link create_job function to know about the parameters
     """
-    @apply_defaults
     def __init__(self,
                  region_name: str,
                  job_name: str,
